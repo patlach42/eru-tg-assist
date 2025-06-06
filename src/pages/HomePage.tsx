@@ -75,6 +75,7 @@ const HomePage: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         result.chats.slice(0, 1).forEach((_peer: any) => {
           _dialogs.push({ title: _peer.title, id: _peer.id });
+          setDialogs(_dialogs);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           getHistory(inclPeer).then((history: any) => {
             loadedDialogsCountRef.current += 1;
@@ -131,7 +132,19 @@ const HomePage: React.FC = () => {
                   message.message ? (
                     <div key={`${message.id}${index}`}>
                       <Card className="text-left p-4 flex flex-col gap-2">
-                        <div className="whitespace-pre-wrap">
+                        <div className="flex flex-row justify-between">
+                          <div className="font-bold text-base">
+                            {message.peer_id._ === "peerChannel"
+                              ? dialogs.find(
+                                  (d) => d.id == message.peer_id.channel_id,
+                                )?.title
+                              : null}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {new Date(message.date * 1000).toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="whitespace-pre-wrap text-sm">
                           {message.message
                             ? message.message
                             : message.media
